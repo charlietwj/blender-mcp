@@ -1,4 +1,6 @@
 import bpy
+import socket
+import threading
 
 bl_info = {
     "name": "BlenderMCP",
@@ -13,12 +15,36 @@ bl_info = {
 class BlenderMCPServer:
     
     def __init__(self):
-        pass
+        self.is_running = False
+        self.socket = None
+        self.server_thread = None
 
     def start(self):
-        pass
+        if self.is_running:
+            print("Server is already running")
+            return 
+        
+        self.is_running = True
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        localhost = "127.0.0.1"
+        port = "5678"
+        self.socket.bind((localhost, port))
+        self.socket.listen()
+
+        self.server_thread = threading.Thread(
+            target=self.server_loop,
+            daemon=True
+        )
+        self.server_thread.start()
 
     def stop(self):
+        pass
+
+    def server_loop(self):
+        pass
+
+    def handle_client(self, conn):
         pass
 
 class BLENDERMCP_PT_Panel(bpy.types.Panel):
