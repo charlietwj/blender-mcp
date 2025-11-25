@@ -39,7 +39,16 @@ class BlenderMCPServer:
         self.server_thread.start()
 
     def stop(self):
-        pass
+        self.is_running = False
+        if self.socket:
+            self.socket.close()
+            self.socket = None
+
+        if self.server_thread:
+            if self.server_thread.is_alive():
+                self.server_thread.join(timeout=1.0)
+
+            self.server_thread = None
 
     def server_loop(self):
         pass
