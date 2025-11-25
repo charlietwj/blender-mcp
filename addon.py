@@ -1,6 +1,8 @@
 import bpy
 import socket
 import threading
+import io
+from contextlib import redirect_stdout
 
 bl_info = {
     "name": "BlenderMCP",
@@ -74,10 +76,22 @@ class BlenderMCPServer:
                     break
 
                 code = data.decode()
-                self.execute_code(code)
+                try:
+                    result = self.execute_code(code)
+                    conn.sendall(result.encode())
+                except Exception as e:
+                    conn.sendall(b"Failed with error: " + str(e).encode())
 
     def execute_code(self, code):
-        pass
+        print(f"Code to execute: {code}")
+        namespace = {"bpy": bpy}
+        buffer = io.StringIO()
+
+        with redirect_stdout(buffer):
+            exec(code, namespace)
+
+        output = buffer.getvalue()
+        return output
 
 class BLENDERMCP_PT_Panel(bpy.types.Panel):
     bl_label = "Blender MCP"
