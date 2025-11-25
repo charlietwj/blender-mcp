@@ -30,6 +30,7 @@ class BlenderMCPServer:
         localhost = "127.0.0.1"
         port = "5678"
         self.socket.bind((localhost, port))
+        self.socket.settimeout(1.0)
         self.socket.listen()
 
         self.server_thread = threading.Thread(
@@ -51,9 +52,21 @@ class BlenderMCPServer:
             self.server_thread = None
 
     def server_loop(self):
-        pass
+        while self.is_running:
+            try:
+                conn, _ = self.socket.accept()
+                conn.settimeout(0.25)
+                
+                thread = threading.Thread(
+                    target=self.handle_client,
+                    args=(conn,),
+                    daemon=True
+                )
+                thread.start()
+            except socket.timeout:
+                continue
 
-    def handle_client(self, conn):
+    def handle_client(self, conn: socket.socket):
         pass
 
 class BLENDERMCP_PT_Panel(bpy.types.Panel):
