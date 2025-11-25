@@ -103,6 +103,7 @@ class BLENDERMCP_PT_Panel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         obj = context.object
+        scene = context.scene
         
         row = layout.row()
         row.label(
@@ -120,6 +121,19 @@ class BLENDERMCP_PT_Panel(bpy.types.Panel):
         
         row = layout.row()
         row.operator("mesh.primitive_cube_add")
+
+        if not scene.blendermcp_server_running:
+            layout.operator(
+                "blendermcp.start_server",
+                text="Connect to MCP Server"
+            )
+        else:
+            layout.operator(
+                "blendermcp.stop_server",
+                text="Disconnect from MCP Server"
+            )
+            layout.label(text="Running on port 5678")
+
 
 class BLENDERMCP_OT_StartServer(bpy.types.Operator):
     bl_idname = "blendermcp.start_server"
