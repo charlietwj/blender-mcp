@@ -76,11 +76,16 @@ class BlenderMCPServer:
                     break
 
                 code = data.decode()
-                try:
-                    result = self.execute_code(code)
-                    conn.sendall(result.encode())
-                except Exception as e:
-                    conn.sendall(b"Failed with error: " + str(e).encode())
+
+                def run_in_main_thread():
+                    try:
+                        result = self.execute_code(code)
+                        conn.sendall(result.encode())
+                    except Exception as e:
+                        conn.sendall(b"Failed with error: " + str(e).encode())
+                    return None
+                
+                bpy.app.timers.register(run_in_main_thread, first_interval=0.0)
 
     def execute_code(self, code):
         print(f"Code to execute: {code}")
