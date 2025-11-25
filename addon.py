@@ -10,7 +10,10 @@ bl_info = {
     "category": "Interface",
 }
 
-class BlenderMCPPanel(bpy.types.Panel):
+class BlenderMCPServer:
+    pass
+
+class BLENDERMCP_PT_Panel(bpy.types.Panel):
     bl_label = "Blender MCP"
     bl_idname = "BLENDERMCP_PT_Panel"
     bl_space_type = "VIEW_3D"
@@ -37,12 +40,27 @@ class BlenderMCPPanel(bpy.types.Panel):
         
         row = layout.row()
         row.operator("mesh.primitive_cube_add")
+
+class BLENDERMCP_OT_StartServer(bpy.types.Operator):
+    bl_idname = "BLENDERMCP_OT_STARTSERVER"
+    bl_label = "Start the connection to Claude Desktop"
+
+    def execute(self, context):
+        if not hasattr(bpy.types, "blendermcp_server"):
+            bpy.types.blendermcp_server = BlenderMCPServer()
+        elif not bpy.types.blendermcp_server:
+            bpy.types.blendermcp_server = BlenderMCPServer()
         
+        bpy.types.blendermcp_server.start()
+        context.scene.blendermcp_server_running = True
+
+        return {'FINISHED'}
+
 def register():
-    bpy.utils.register_class(BlenderMCPPanel)
+    bpy.utils.register_class(BLENDERMCP_PT_Panel)
 
 def unregister():
-    bpy.utils.unregister_class(BlenderMCPPanel)
+    bpy.utils.unregister_class(BLENDERMCP_PT_Panel)
 
 if __name__ == "__main__":
     register()
