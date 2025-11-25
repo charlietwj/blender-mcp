@@ -55,7 +55,7 @@ class BlenderMCPServer:
         while self.is_running:
             try:
                 conn, _ = self.socket.accept()
-                conn.settimeout(0.25)
+                conn.setblocking(True)
                 
                 thread = threading.Thread(
                     target=self.handle_client,
@@ -66,7 +66,17 @@ class BlenderMCPServer:
             except socket.timeout:
                 continue
 
-    def handle_client(self, conn: socket.socket):
+    def handle_client(self, conn: socket.socket):        
+        with conn:
+            while self.is_running:
+                data = conn.recv(65536)
+                if not data:
+                    break
+
+                code = data.decode()
+                self.execute_code(code)
+
+    def execute_code(self, code):
         pass
 
 class BLENDERMCP_PT_Panel(bpy.types.Panel):
