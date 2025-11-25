@@ -11,7 +11,15 @@ bl_info = {
 }
 
 class BlenderMCPServer:
-    pass
+    
+    def __init__(self):
+        pass
+
+    def start(self):
+        pass
+
+    def stop(self):
+        pass
 
 class BLENDERMCP_PT_Panel(bpy.types.Panel):
     bl_label = "Blender MCP"
@@ -42,7 +50,7 @@ class BLENDERMCP_PT_Panel(bpy.types.Panel):
         row.operator("mesh.primitive_cube_add")
 
 class BLENDERMCP_OT_StartServer(bpy.types.Operator):
-    bl_idname = "BLENDERMCP_OT_STARTSERVER"
+    bl_idname = "blendermcp.start_server"
     bl_label = "Start the connection to Claude Desktop"
 
     def execute(self, context):
@@ -55,9 +63,31 @@ class BLENDERMCP_OT_StartServer(bpy.types.Operator):
         context.scene.blendermcp_server_running = True
 
         return {'FINISHED'}
+    
+class BLENDERMCP_OT_StopServer(bpy.types.Operator):
+    bl_idname = "blendermcp.stop_server"
+    bl_label = "Stop the connection to Claude Desktop"
+
+    def execute(self, context):
+        if hasattr(bpy.types, "blendermcp_server") and bpy.types.blendermcp_server:
+            bpy.types.blendermcp_server.stop()
+            del bpy.types.blendermcp_server
+
+        context.scene.blendermcp_server_running = True
+
+        return {'FINISHED'}
 
 def register():
+    bpy.types.Scene.blendermcp_server_running = bpy.props.BoolProperty(
+        name = "Server Running",
+        default = False
+    )
+
     bpy.utils.register_class(BLENDERMCP_PT_Panel)
+    bpy.utils.register_class(BLENDERMCP_OT_StartServer)
+    bpy.utils.register_class(BLENDERMCP_OT_StopServer)
+
+    print("Register Blender addon")
 
 def unregister():
     bpy.utils.unregister_class(BLENDERMCP_PT_Panel)
