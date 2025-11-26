@@ -22,7 +22,7 @@ class BlenderConnection:
     def disconnect(self):
         pass
 
-    def send_code(self, code: str) -> str:
+    def execute_code(self, code: str) -> str:
         pass
 
     def get_response(self):
@@ -36,7 +36,7 @@ def execute_blender_code(code: str):
 
     try:
         blender = BlenderConnection()
-        result = blender.send_code(code)
+        result = blender.execute_code(code)
         return f"Code executed successfully: {result}"
     except Exception as e:
         return f"Error occurred: {str(e)}"
