@@ -23,13 +23,19 @@ class BlenderConnection:
     def execute_code(self, code: str) -> str:
         self.sock.sendall(code.encode())
         result = ""
+
         while True:
             data = self.sock.recv(65536)
             if not data:
                 break
-
-            result += data.decode()
             
+            chunk = data.decode()
+            if chunk == "__END__":
+                break
+
+            result += chunk
+
+        result = result.strip()
         return result
 
 @mcp.tool()

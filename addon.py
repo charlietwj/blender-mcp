@@ -81,6 +81,7 @@ class BlenderMCPServer:
                     try:
                         result = self.execute_code(code)
                         conn.sendall(result.encode())
+                        conn.sendall(b"__END__")
                     except Exception as e:
                         conn.sendall(b"Failed with error: " + str(e).encode())
                     return None
