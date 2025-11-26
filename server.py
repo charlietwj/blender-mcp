@@ -1,4 +1,5 @@
 from fastmcp import FastMCP
+import socket
 
 mcp = FastMCP("BlenderMCP")
 
@@ -13,11 +14,14 @@ class BlenderConnection:
 
     def __init__(self):
         if not hasattr(self, "_initialized"):
-            self.socket = None
+            self.sock = None
+            self.host = "127.0.0.1"
+            self.port = 5678
             self._initialized = True
 
     def connect(self):
-        pass
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect((self.host, self.port))
 
     def disconnect(self):
         pass
