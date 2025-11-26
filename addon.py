@@ -30,7 +30,7 @@ class BlenderMCPServer:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         localhost = "127.0.0.1"
-        port = "5678"
+        port = 5678
         self.socket.bind((localhost, port))
         self.socket.settimeout(1.0)
         self.socket.listen()
@@ -164,7 +164,7 @@ class BLENDERMCP_OT_StopServer(bpy.types.Operator):
             bpy.types.blendermcp_server.stop()
             del bpy.types.blendermcp_server
 
-        context.scene.blendermcp_server_running = True
+        context.scene.blendermcp_server_running = False
 
         return {'FINISHED'}
 
