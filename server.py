@@ -5,7 +5,6 @@ mcp = FastMCP("BlenderMCP")
 class BlenderConnection:
 
     _instance = None
-    _initialized = False
 
     def __new__(cls):
         if cls._instance is None:
@@ -13,7 +12,7 @@ class BlenderConnection:
         return cls._instance
 
     def __init__(self):
-        if not self._initialized:
+        if not hasattr(self, "_initialized"):
             self.socket = None
             self._initialized = True
 
