@@ -14,22 +14,13 @@ class BlenderConnection:
 
     def __init__(self):
         if not hasattr(self, "_initialized"):
-            self.sock = None
             self.host = "127.0.0.1"
             self.port = 5678
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.sock.connect((self.host, self.port))
             self._initialized = True
 
-    def connect(self):
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((self.host, self.port))
-
-    def disconnect(self):
-        pass
-
     def execute_code(self, code: str) -> str:
-        pass
-
-    def get_response(self):
         pass
 
 @mcp.tool()
