@@ -4,8 +4,18 @@ mcp = FastMCP("BlenderMCP")
 
 class BlenderConnection:
 
+    _instance = None
+    _initialized = False
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self):
-        pass
+        if not self._initialized:
+            self.socket = None
+            self._initialized = True
 
     def connect(self):
         pass
