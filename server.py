@@ -21,7 +21,16 @@ class BlenderConnection:
             self._initialized = True
 
     def execute_code(self, code: str) -> str:
-        pass
+        self.sock.sendall(code.encode())
+        result = ""
+        while True:
+            data = self.sock.recv(65536)
+            if not data:
+                break
+
+            result += data.decode()
+            
+        return result
 
 @mcp.tool()
 def execute_blender_code(code: str):
