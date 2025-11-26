@@ -84,6 +84,7 @@ class BlenderMCPServer:
                         conn.sendall(b"__END__")
                     except Exception as e:
                         conn.sendall(b"Failed with error: " + str(e).encode())
+                        conn.sendall(b"__END__")
                     return None
                 
                 bpy.app.timers.register(run_in_main_thread, first_interval=0.0)
