@@ -108,25 +108,7 @@ class BLENDERMCP_PT_Panel(bpy.types.Panel):
     
     def draw(self, context):
         layout = self.layout
-        obj = context.object
         scene = context.scene
-        
-        row = layout.row()
-        row.label(
-            text="Hi world!",
-            icon="WORLD_DATA"
-        )
-        
-        row = layout.row()
-        row.label(
-            text='Active object is: ' + obj.name
-        )
-        
-        row = layout.row()
-        row.prop(obj, "name")
-        
-        row = layout.row()
-        row.operator("mesh.primitive_cube_add")
 
         if not scene.blendermcp_server_running:
             layout.operator(
